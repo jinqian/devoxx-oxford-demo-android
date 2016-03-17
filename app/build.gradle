@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
@@ -21,9 +23,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 ext.supportLibVersion = '23.2.0'
+ext.permissionDispatcherVersion = '2.0.8'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -31,10 +39,15 @@ dependencies {
     compile "com.android.support:appcompat-v7:$supportLibVersion"
     compile "com.android.support:design:$supportLibVersion"
 
+    compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
     compile 'com.squareup.okhttp:okhttp:2.7.5'
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'io.reactivex:rxandroid:1.1.0'
+
+    // permission
+    compile "com.github.hotchemi:permissionsdispatcher:$permissionDispatcherVersion"
+    apt "com.github.hotchemi:permissionsdispatcher-processor:$permissionDispatcherVersion"
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'

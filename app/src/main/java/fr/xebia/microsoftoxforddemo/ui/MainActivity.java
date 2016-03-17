@@ -1,31 +1,64 @@
 package fr.xebia.microsoftoxforddemo.ui;
 
+import android.Manifest;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
+import java.io.File;
+import java.io.IOException;
+
+import butterknife.Bind;
+import butterknife.OnClick;
+import fr.xebia.microsoftoxforddemo.BaseActivity;
 import fr.xebia.microsoftoxforddemo.R;
+import fr.xebia.microsoftoxforddemo.util.ImageUtil;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.RuntimePermissions;
 
-public class MainActivity extends AppCompatActivity
+@RuntimePermissions
+public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private static final int REQUEST_TAKE_PHOTO = 0;
+
+    @Bind(R.id.chosen_image) ImageView chosenImage;
+
+    private ActionBarDrawerToggle toggle;
+    private DrawerLayout drawer;
+
+    private Uri uriPhotoTaken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.title_activity_main);
+        toolbar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -42,16 +75,82 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        drawer.removeDrawerListener(toggle);
+    }
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_about) {
-            // TODO
+            // TODO display app info
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TAKE_PHOTO) {
+            if (resultCode == RESULT_OK) {
+                Uri imageUri;
+                if (data == null || data.getData() == null) {
+                    imageUri = uriPhotoTaken;
+                } else {
+                    imageUri = data.getData();
+                }
+                displayImage(imageUri);
+            }
+        }
+    }
+
+    @OnClick(R.id.btn_take_photo)
+    public void onClickButtonTakePhoto(View view) {
+        MainActivityPermissionsDispatcher.takePhotoWithCheck(this);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        MainActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void takePhoto() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            try {
+                // Save the photo taken to a temporary file
+                File file = File.createTempFile("IMG_", ".jpg", storageDir);
+                uriPhotoTaken = Uri.fromFile(file);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, uriPhotoTaken);
+                startActivityForResult(intent, REQUEST_TAKE_PHOTO);
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.error_take_photo, Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    @OnPermissionDenied({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showDeniedForTakePhoto() {
+        Toast.makeText(this, R.string.permission_denied, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnNeverAskAgain({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    void showNeverAskForTakePhoto() {
+        Toast.makeText(this, R.string.permission_neverask, Toast.LENGTH_SHORT).show();
+    }
+
+    public void displayImage(Uri imageUri) {
+        Bitmap bitmap = ImageUtil.loadSizeLimitedBitmapFromUri(imageUri, getContentResolver());
+        if (bitmap != null) {
+            chosenImage.setImageBitmap(bitmap);
+        }
     }
 }

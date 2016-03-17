@@ -3,4 +3,5 @@
     <color name="colorPrimary">#009688</color>
     <color name="colorPrimaryDark">#00796B</color>
     <color name="colorAccent">#004D40</color>
+    <color name="button_disabled_background">#C0C0C0</color>
 </resources>
