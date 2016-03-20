@@ -159,9 +159,7 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.btn_match)
     public void onClickButtonMatch(View v) {
         if (bitmap != null) {
-            matchProgress.setVisibility(View.VISIBLE);
-            matchProgressBar.setVisibility(View.VISIBLE);
-            matchProgressText.setText(getString(R.string.matching));
+            displayProgressIndicators();
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos); //bm is the bitmap object
@@ -187,9 +185,20 @@ public class MainActivity extends BaseActivity
                         }
                     });
         } else {
-            matchProgress.setVisibility(View.GONE);
+            hideProgressIndicator();
             Toast.makeText(this, R.string.no_bitmap_available, Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void displayProgressIndicators() {
+        matchProgress.setVisibility(View.VISIBLE);
+        matchProgressBar.setVisibility(View.VISIBLE);
+        matchProgressText.setText(getString(R.string.matching));
+    }
+
+    private void hideProgressIndicator() {
+        matchProgress.setVisibility(View.GONE);
+        matchProgress.animate().translationY(0).start();
     }
 
     private void onMatchFailed() {
@@ -236,7 +245,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void displayImage(Uri imageUri) {
-        matchProgress.setVisibility(View.GONE);
+        hideProgressIndicator();
         bitmap = ImageUtil.loadSizeLimitedBitmapFromUri(imageUri, getContentResolver());
         if (bitmap != null) {
             chosenImage.setImageBitmap(bitmap);
