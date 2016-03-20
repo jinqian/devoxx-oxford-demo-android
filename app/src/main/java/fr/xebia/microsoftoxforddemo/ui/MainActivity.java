@@ -37,6 +37,7 @@ public class MainActivity extends BaseActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final int REQUEST_TAKE_PHOTO = 0;
+    private static final int REQUEST_SELECT_IMAGE_IN_ALBUM = 1;
 
     @Bind(R.id.chosen_image) ImageView chosenImage;
 
@@ -96,7 +97,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_TAKE_PHOTO) {
+        if (requestCode == REQUEST_TAKE_PHOTO || requestCode == REQUEST_SELECT_IMAGE_IN_ALBUM) {
             if (resultCode == RESULT_OK) {
                 Uri imageUri;
                 if (data == null || data.getData() == null) {
@@ -110,8 +111,22 @@ public class MainActivity extends BaseActivity
     }
 
     @OnClick(R.id.btn_take_photo)
-    public void onClickButtonTakePhoto(View view) {
+    public void onClickButtonTakePhoto(View v) {
         MainActivityPermissionsDispatcher.takePhotoWithCheck(this);
+    }
+
+    @OnClick(R.id.btn_select_from_gallery)
+    public void onClickButtonSelectFromGallery(View v) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM);
+        }
+    }
+
+    @OnClick(R.id.btn_match)
+    public void onClickButtonMatch(View v) {
+        // TODO post photo to get match result
     }
 
     @Override
@@ -147,7 +162,7 @@ public class MainActivity extends BaseActivity
         Toast.makeText(this, R.string.permission_neverask, Toast.LENGTH_SHORT).show();
     }
 
-    public void displayImage(Uri imageUri) {
+    private void displayImage(Uri imageUri) {
         Bitmap bitmap = ImageUtil.loadSizeLimitedBitmapFromUri(imageUri, getContentResolver());
         if (bitmap != null) {
             chosenImage.setImageBitmap(bitmap);

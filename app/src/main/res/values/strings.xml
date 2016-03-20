@@ -6,8 +6,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <!-- button text -->
-    <string name="btn_take_photo">Take a photo</string>
-    <string name="btn_send">Send</string>
+    <string name="btn_take_photo">TAKE A PHOTO</string>
+    <string name="btn_match">Match</string>
+    <string name="btn_select_from_gallery">CHOOSE AN IMAGE</string>
 
     <!-- content description -->
     <string name="content_description_chosen_image">chosen image</string>
@@ -16,7 +17,6 @@
     <string name="error_take_photo">Error occurred.</string>
 
     <!-- permission -->
-
     <string name="permission_neverask">Needed permissions were denied with never ask again.</string>
     <string name="permission_denied">Needed permissions were denied. Please consider granting them in order to use the demo!</string>
 
