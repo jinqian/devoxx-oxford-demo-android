@@ -19,5 +19,9 @@
     <!-- permission -->
     <string name="permission_neverask">Needed permissions were denied with never ask again.</string>
     <string name="permission_denied">Needed permissions were denied. Please consider granting them in order to use the demo!</string>
+    <string name="no_bitmap_available">Please take a photo or choose an image from your gallery first.</string>
+    <string name="matching">Matching…</string>
+    <string name="no_match">No match was found.</string>
+    <string name="match_found">Match found: %s.</string>
 
 </resources>
