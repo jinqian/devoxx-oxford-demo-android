@@ -1,6 +1,7 @@
 <resources>
-    <string name="app_name">MicrosoftOxfordDemo</string>
-    <string name="title_activity_main">Oxford Demo</string>
+    <string name="app_name">Xebienza-Oxford</string>
+    <string name="title_activity_main">Xebienza-Oxford</string>
+    <string name="title_activity_about">About</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -23,5 +24,7 @@
     <string name="matching">Matching…</string>
     <string name="no_match">No match was found.</string>
     <string name="match_found">Match found: %s.</string>
+    <string name="about_app">Xebienza-Oxford is a straightforward sample to demonstrate the Oxford\'s capabilities on mobile device. Take a selfie with someone to know about him / her.</string>
+    <string name="collaboration">Collaboration of</string>
 
 </resources>

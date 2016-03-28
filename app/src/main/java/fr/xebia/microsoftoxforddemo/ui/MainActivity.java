@@ -3,7 +3,6 @@ package fr.xebia.microsoftoxforddemo.ui;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,7 +12,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +27,6 @@ import java.io.IOException;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import fr.xebia.microsoftoxforddemo.BaseActivity;
 import fr.xebia.microsoftoxforddemo.BuildConfig;
 import fr.xebia.microsoftoxforddemo.R;
 import fr.xebia.microsoftoxforddemo.api.RestService;
@@ -83,10 +80,7 @@ public class MainActivity extends BaseActivity
 
         setContentView(R.layout.activity_main);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.title_activity_main);
-        toolbar.setTitleTextColor(Color.WHITE);
-        setSupportActionBar(toolbar);
+        actionBar.setTitle(R.string.title_activity_main);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(
@@ -119,7 +113,7 @@ public class MainActivity extends BaseActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_about) {
-            // TODO display app info
+            startActivity(new Intent(this, AboutActivity.class));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
