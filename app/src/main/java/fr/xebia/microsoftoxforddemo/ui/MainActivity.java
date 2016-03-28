@@ -60,6 +60,7 @@ public class MainActivity extends BaseActivity
 
     private ActionBarDrawerToggle toggle;
     private DrawerLayout drawer;
+    private NavigationView navigationView;
 
     private Uri uriPhotoTaken;
     private Bitmap bitmap;
@@ -88,8 +89,14 @@ public class MainActivity extends BaseActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override

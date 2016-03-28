@@ -8,4 +8,5 @@
     <color name="imageInfo">#bfffc107</color>
     <color name="progressAccent">#E91E63</color>
     <color name="progressTint">#b3b3b3</color>
+    <color name="default_image_bg">#EEEEEE</color>
 </resources>
