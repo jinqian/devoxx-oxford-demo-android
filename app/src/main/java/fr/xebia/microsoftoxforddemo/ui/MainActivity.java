@@ -191,6 +191,8 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    // UI Helper
+
     private void displayProgressIndicators() {
         matchProgress.setVisibility(View.VISIBLE);
         matchProgressBar.setVisibility(View.VISIBLE);
@@ -222,11 +224,12 @@ public class MainActivity extends BaseActivity
     void takePhoto() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
-            File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+            File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             try {
                 // Save the photo taken to a temporary file
                 File file = File.createTempFile("IMG_", ".jpg", storageDir);
                 uriPhotoTaken = Uri.fromFile(file);
+                addPhotoToGallery(uriPhotoTaken.getPath());
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, uriPhotoTaken);
                 startActivityForResult(intent, REQUEST_TAKE_PHOTO);
             } catch (IOException e) {
@@ -251,5 +254,13 @@ public class MainActivity extends BaseActivity
         if (bitmap != null) {
             chosenImage.setImageBitmap(bitmap);
         }
+    }
+
+    private void addPhotoToGallery(String currentPhotoPath) {
+        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+        File f = new File(currentPhotoPath);
+        Uri contentUri = Uri.fromFile(f);
+        mediaScanIntent.setData(contentUri);
+        sendBroadcast(mediaScanIntent);
     }
 }
