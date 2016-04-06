@@ -34,6 +34,7 @@
                 <ImageView
                     android:id="@+id/chosen_image"
                     android:layout_width="match_parent"
+                    android:scaleType="centerCrop"
                     android:layout_height="match_parent"
                     android:background="@color/default_image_bg"
                     android:contentDescription="@string/content_description_chosen_image"
