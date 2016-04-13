@@ -17,13 +17,14 @@ android {
         buildConfigField 'String', 'API_EP', "\"http://selfalliance.azurewebsites.net/api/\""
     }
 
-    // signingConfigs info should be configured in global gradle.properties
+    // signingConfigs info should be configured in your bash_profile
+    // assembleRelease will only work in terminal because Android Studio on Mac can't read env
     signingConfigs {
         release {
-            storeFile file(XEBIENZA_KEYSTORE)
-            storePassword XEBIENZA_KEYSTORE_PWD
-            keyAlias XEBIENZA_KEYSTORE_KEY_ALIAS
-            keyPassword XEBIENZA_KEYSTORE_KEY_PWD
+            storeFile file(String.valueOf(System.getenv("XEBIENZA_KEYSTORE")))
+            storePassword System.getenv("XEBIENZA_KEYSTORE_PWD")
+            keyAlias System.getenv("XEBIENZA_KEYSTORE_KEY_ALIAS")
+            keyPassword System.getenv("XEBIENZA_KEYSTORE_KEY_PWD")
         }
     }
 
