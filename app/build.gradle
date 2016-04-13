@@ -17,10 +17,21 @@ android {
         buildConfigField 'String', 'API_EP', "\"http://selfalliance.azurewebsites.net/api/\""
     }
 
+    // signingConfigs info should be configured in global gradle.properties
+    signingConfigs {
+        release {
+            storeFile file(XEBIENZA_KEYSTORE)
+            storePassword XEBIENZA_KEYSTORE_PWD
+            keyAlias XEBIENZA_KEYSTORE_KEY_ALIAS
+            keyPassword XEBIENZA_KEYSTORE_KEY_PWD
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
 
