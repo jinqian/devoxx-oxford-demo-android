@@ -24,6 +24,7 @@ import android.widget.Toast;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import butterknife.Bind;
 import butterknife.OnClick;
@@ -69,7 +70,10 @@ public class MainActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20_000, TimeUnit.MILLISECONDS)
+                .writeTimeout(30_000, TimeUnit.MILLISECONDS)
+                .build();
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(BuildConfig.API_EP)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
